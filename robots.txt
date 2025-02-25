@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://viktormalyuchenko.github.io/pompulse/sitemap.xml

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="PomoPulse — ваш идеальный таймер Pomodoro для повышения продуктивности. Работайте с фокусом и отдыхайте эффективно!">
+    <meta name="keywords" content="Pomodoro, таймер, продуктивность, фокус, отдых, работа, управление временем">
+    <meta name="author" content="Viktor Malyuchenko">
+    <title>PomoPulse - Таймер Pomodoro для продуктивности и фокуса</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="canonical" href="https://viktormalyuchenko.github.io/pompulse/">
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "PomoPulse",
+          "description": "Tаймер Pomodoro для повышения продуктивности и фокуса.",
+          "url": "https://viktormalyuchenko.github.io/pompulse/",
+          "applicationCategory": "Productivity",
+          "operatingSystem": "All",
+          "author": {
+            "@type": "Person",
+            "name": "Viktor Malyuchenko"
+          }
+        }
+        </script>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(99841001, "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true
+        });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/99841001" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>PomoPulse</h1>
+        </header>
+        <button id="skip-btn" class="skip-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+                <polyline points="15 18 21 12 15 6"></polyline>
+            </svg>
+        </button>
+        <main class="content">
+            <div class="timer">
+                <svg class="progress-ring" width="240" height="240">
+                    <circle class="progress-ring__circle" stroke-width="12" fill="transparent" r="108" cx="120"
+                        cy="120" />
+                </svg>
+                <div class="timer-display" id="time">25:00</div>
+            </div>
+            <div class="controls">
+                <button id="toggle-btn" class="btn">
+                    <svg id="play-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <svg id="pause-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </button>
+            </div>
+        </main>
+        <div class="pomodoro-count">Помидоров: <span id="pomodoro-count">0</span></div>
+        <button id="settings-btn" class="settings-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l-.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                </path>
+            </svg>
+        </button>
+        <button id="info-btn" class="info-btn">i</button>
+        <div class="modal" id="settings-modal">
+            <div class="modal-content">
+                <span class="close-btn" id="close-settings">×</span>
+                <h3>Настройки</h3>
+                <div class="settings-section">
+                    <label>Время помидора (мин):
+                        <span class="input-group">
+                            <button class="adjust-btn" data-target="pomodoro-time" data-action="decrease">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                            <input type="number" id="pomodoro-time" value="25" readonly>
+                            <button class="adjust-btn" data-target="pomodoro-time" data-action="increase">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </span>
+                    </label>
+                    <label>Короткий перерыв (мин):
+                        <span class="input-group">
+                            <button class="adjust-btn" data-target="short-break-time" data-action="decrease">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                            <input type="number" id="short-break-time" value="5" readonly>
+                            <button class="adjust-btn" data-target="short-break-time" data-action="increase">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </span>
+                    </label>
+                    <label>Длинный перерыв (мин):
+                        <span class="input-group">
+                            <button class="adjust-btn" data-target="long-break-time" data-action="decrease">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                            <input type="number" id="long-break-time" value="15" readonly>
+                            <button class="adjust-btn" data-target="long-break-time" data-action="increase">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </span>
+                    </label>
+                    <label>Помидоров в раунде:
+                        <span class="input-group">
+                            <button class="adjust-btn" data-target="pomodoros-per-round" data-action="decrease">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                            <input type="number" id="pomodoros-per-round" value="4" readonly>
+                            <button class="adjust-btn" data-target="pomodoros-per-round" data-action="increase">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </span>
+                    </label>
+                    <label>Помидоров за день:
+                        <span class="input-group">
+                            <button class="adjust-btn" data-target="daily-pomodoros" data-action="decrease">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                            <input type="number" id="daily-pomodoros" value="10" readonly>
+                            <button class="adjust-btn" data-target="daily-pomodoros" data-action="increase">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </button>
+                        </span>
+                    </label>
+                    <label>Уведомления:
+                        <span class="checkbox-wrapper">
+                            <input type="checkbox" id="notifications" checked>
+                            <span class="custom-checkbox"></span>
+                        </span>
+                    </label>
+                </div>
+                <button id="save-settings" class="btn save">Сохранить</button>
+            </div>
+        </div>
+        <div class="modal" id="info-modal">
+            <div class="modal-content">
+                <span class="close-btn" id="close-info">×</span>
+                <h3>О PomoPulse</h3>
+                <p>PomoPulse — это современный таймер Pomodoro, разработанный для повышения вашей продуктивности и
+                    управления временем. Используйте технику Pomodoro, чтобы работать с максимальным фокусом и отдыхать
+                    эффективно. Настраивайте время работы и перерывов, отслеживайте свои достижения и достигайте целей
+                    каждый день! Этот инструмент идеально подходит для студентов, фрилансеров и всех, кто хочет улучшить
+                    концентрацию и организовать свой рабочий день. PomoPulse помогает разбивать задачи на управляемые
+                    интервалы, минимизировать отвлечения и поддерживать баланс между работой и отдыхом.</p>
+            </div>
+        </div>
+    </div>
+    <audio id="alarm-pomodoro" src="alarm-bell.mp3"></audio>
+    <audio id="alarm-break" src="alarm-wood.mp3"></audio>
+    <script src="script.js"></script>
+</body>
+
+</html>

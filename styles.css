@@ -1,0 +1,368 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text-color);
+}
+
+:root[data-state="pomodoro"] {
+    --bg: linear-gradient(135deg, #ff6347 0%, #e63946 100%);
+    --text-color: #ffffff;
+    --circle-color: #ffffff;
+    --icon-color: #ff6347;
+}
+
+:root[data-state="break"] {
+    --bg: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    --text-color: #ffffff;
+    --circle-color: #ffffff;
+    --icon-color: #2ecc71;
+}
+
+.container {
+    padding: 0;
+    text-align: center;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+h1 {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.skip-btn {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.skip-btn:hover {
+    transform: translateX(-50%) scale(1.1);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.timer {
+    position: relative;
+    margin: 30px 0;
+}
+
+.timer-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.progress-ring__circle {
+    stroke: var(--circle-color);
+    transition: stroke-dashoffset 0.35s;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.btn {
+    width: 120px;
+    height: 120px;
+    border: none;
+    border-radius: 50%;
+    background: var(--circle-color);
+    color: var(--icon-color);
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.pomodoro-count {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.settings-btn,
+.info-btn {
+    position: absolute;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.settings-btn {
+    top: 10px;
+    right: 10px;
+}
+
+.info-btn {
+    bottom: 10px;
+    right: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    width: 350px;
+    position: relative;
+    color: var(--text-color);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h3 {
+    margin: 0;
+    padding-top: 10px;
+    /* Выравнивание с крестиком */
+    display: inline-block;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-color);
+}
+
+.settings-section {
+    margin: 20px 0 0;
+    /* Отступ только сверху */
+}
+
+.modal-content label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.modal-content input[type="number"] {
+    width: 50px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--text-color);
+    text-align: center;
+    background: transparent;
+    color: var(--text-color);
+    appearance: textfield;
+}
+
+.modal-content input[type="number"]::-webkit-inner-spin-button,
+.modal-content input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.adjust-btn {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    background: var(--icon-color);
+    color: white;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 5px;
+}
+
+.adjust-btn:hover {
+    background: #e5533d;
+}
+
+.checkbox-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+}
+
+.custom-checkbox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-color);
+    border-radius: 4px;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked+.custom-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 6px;
+    height: 10px;
+    border: solid var(--icon-color);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.btn.save {
+    padding: 12px 12px;
+    /* Уменьшенная высота для пропорциональности */
+    border: none;
+    border-radius: 5px;
+    background: var(--icon-color);
+    color: white;
+    cursor: pointer;
+    width: auto;
+    height: auto;
+    /* Не занимает всю ширину */
+    display: inline-block;
+    line-height: 1;
+    /* Улучшаем вертикальное выравнивание текста */
+}
+
+/* Адаптивный дизайн */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .timer {
+        width: 200px;
+        height: 200px;
+    }
+
+    .progress-ring {
+        width: 200px;
+        height: 200px;
+    }
+
+    .timer-display {
+        font-size: 3rem;
+    }
+
+    .btn {
+        width: 100px;
+        height: 100px;
+    }
+
+    .btn svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .skip-btn,
+    .settings-btn,
+    .info-btn {
+        font-size: 1.2rem;
+    }
+
+    .pomodoro-count {
+        font-size: 0.9rem;
+    }
+
+    .modal-content {
+        width: 90%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .timer {
+        width: 150px;
+        height: 150px;
+    }
+
+    .progress-ring {
+        width: 150px;
+        height: 150px;
+    }
+
+    .timer-display {
+        font-size: 2.5rem;
+    }
+
+    .btn {
+        width: 80px;
+        height: 80px;
+    }
+
+    .btn svg {
+        width: 32px;
+        height: 32px;
+    }
+}
