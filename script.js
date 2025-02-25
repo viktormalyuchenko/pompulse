@@ -70,15 +70,11 @@ function updateTitle() {
 }
 
 function updateFavicon(state) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 32;
-    canvas.height = 32;
-    const ctx = canvas.getContext('2d');
-    ctx.beginPath();
-    ctx.arc(16, 16, 14, 0, 2 * Math.PI);
-    ctx.fillStyle = state === 'pomodoro' ? '#ff6347' : '#2ecc71';
-    ctx.fill();
-    favicon.href = canvas.toDataURL('image/png');
+    if (state === 'pomodoro') {
+        favicon.href = 'favicon-red.png';
+    } else {
+        favicon.href = 'favicon-green.png';
+    }
 }
 
 function startTimer() {
@@ -86,6 +82,9 @@ function startTimer() {
     isPaused = false;
     playIcon.style.display = 'none';
     pauseIcon.style.display = 'block';
+    if (typeof ym === 'function') {
+        ym(99841001, 'reachGoal', 'startTimer'); // Цель: запуск таймера
+    }
     timer = setInterval(() => {
         if (timeLeft > 0) {
             timeLeft--;
@@ -101,6 +100,9 @@ function startTimer() {
                 pomodoroCountDisplay.textContent = pomodoroCount;
                 if (notificationsEnabled && Notification.permission === 'granted') {
                     new Notification('PomoPulse', { body: quotes[Math.floor(Math.random() * quotes.length)] });
+                }
+                if (typeof ym === 'function') {
+                    ym(99841001, 'reachGoal', 'pomodoroCompleted'); // Цель: завершение помидора
                 }
                 mode = (currentRound % pomodorosPerRound === 0) ? 'long-break' : 'short-break';
             } else {
@@ -119,6 +121,9 @@ function pauseTimer() {
     isPaused = true;
     playIcon.style.display = 'block';
     pauseIcon.style.display = 'none';
+    if (typeof ym === 'function') {
+        ym(99841001, 'reachGoal', 'pauseTimer'); // Цель: пауза таймера
+    }
 }
 
 function toggleTimer() {
@@ -133,13 +138,20 @@ function skipTimer() {
         currentRound++;
         savePomodoroCount();
         pomodoroCountDisplay.textContent = pomodoroCount;
+        if (typeof ym === 'function') {
+            ym(99841001, 'reachGoal', 'skipPomodoro'); // Цель: пропуск помидора
+        }
         mode = (currentRound % pomodorosPerRound === 0) ? 'long-break' : 'short-break';
     } else {
         mode = 'pomodoro';
+        if (typeof ym === 'function') {
+            ym(99841001, 'reachGoal', 'skipBreak'); // Цель: пропуск перерыва
+        }
     }
     setTime(durations[mode]);
     updateState();
-    startTimer();
+    isPaused = false; // Убедимся, что таймер не на паузе
+    startTimer(); // Автоматический запуск следующего этапа
 }
 
 function getCurrentDate() {
@@ -191,21 +203,37 @@ function saveSettings() {
     localStorage.setItem('pomoSettings', JSON.stringify(settings));
 }
 
+if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener('click', () => {
+        durations.pomodoro = document.getElementById('pomodoro-time').value * 60;
+        durations['short-break'] = document.getElementById('short-break-time').value * 60;
+        durations['long-break'] = document.getElementById('long-break-time').value * 60;
+        pomodorosPerRound = parseInt(document.getElementById('pomodoros-per-round').value);
+        dailyPomodoros = parseInt(document.getElementById('daily-pomodoros').value);
+        notificationsEnabled = document.getElementById('notifications').checked;
+        setTime(durations[mode]);
+        updateState();
+        saveSettings();
+        settingsModal.style.display = 'none';
+        if (typeof ym === 'function') {
+            ym(99841001, 'reachGoal', 'saveSettings'); // Цель: сохранение настроек
+        }
+    });
+}
+
 toggleBtn.addEventListener('click', toggleTimer);
 skipBtn.addEventListener('click', skipTimer);
-settingsBtn.addEventListener('click', () => settingsModal.style.display = 'flex');
-infoBtn.addEventListener('click', () => infoModal.style.display = 'flex');
-saveSettingsBtn.addEventListener('click', () => {
-    durations.pomodoro = document.getElementById('pomodoro-time').value * 60;
-    durations['short-break'] = document.getElementById('short-break-time').value * 60;
-    durations['long-break'] = document.getElementById('long-break-time').value * 60;
-    pomodorosPerRound = parseInt(document.getElementById('pomodoros-per-round').value);
-    dailyPomodoros = parseInt(document.getElementById('daily-pomodoros').value);
-    notificationsEnabled = document.getElementById('notifications').checked;
-    setTime(durations[mode]);
-    updateState();
-    saveSettings(); // Сохраняем настройки
-    settingsModal.style.display = 'none';
+settingsBtn.addEventListener('click', () => {
+    settingsModal.style.display = 'flex';
+    if (typeof ym === 'function') {
+        ym(99841001, 'reachGoal', 'openSettings'); // Цель: открытие настроек
+    }
+});
+infoBtn.addEventListener('click', () => {
+    infoModal.style.display = 'flex';
+    if (typeof ym === 'function') {
+        ym(99841001, 'reachGoal', 'openInfo'); // Цель: открытие информации
+    }
 });
 closeSettingsBtn.addEventListener('click', () => settingsModal.style.display = 'none');
 closeInfoBtn.addEventListener('click', () => infoModal.style.display = 'none');
